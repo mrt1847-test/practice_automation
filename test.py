@@ -4,7 +4,7 @@ import os
 from appium import webdriver
 import time
 from appium.options.android import UiAutomator2Options
-
+from src.home import *
 # 디바이스 및 앱 정보 설정pip
 
 options = UiAutomator2Options()
