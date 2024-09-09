@@ -4,11 +4,17 @@ import time
 # 디바이스 및 앱 정보 설정
 desired_caps = {
     "platformName": "Android",
-    "deviceName": "Android Emulator",  # 실제 디바이스의 이름을 사용
-    "app": "/path/to/your/app.apk",   # 테스트하려는 APK 파일 경로
-    "appPackage": "com.example",      # 앱의 패키지 이름
-    "appActivity": "com.example.MainActivity",  # 앱의 시작 액티비티
-    "automationName": "UiAutomator2"  # Android용으로 UiAutomator2 사용
+    "deviceName": "",
+    "automationName": "UiAutomator2",
+    "app": "C:\\APK\\GmarketMobile_747.04222328.apk",
+    "newCommandTimeout": 900,
+    "appPackage": "com.ebay.kr.gmarket",
+    "appActivity": "com.ebay.kr.gmarket.eBayKoreaGmarketActivity",
+    "acceptInsecureCerts": true,
+    "noReset": "false",
+    "chromedriverExecutable": "c:\\webdriver\\appium\\chromedriver.exe",
+    "appium:chrome_options": {"androidPackage": "com.ebay.kr.gmarket"}
+
 }
 
 # Appium 서버와 연결
