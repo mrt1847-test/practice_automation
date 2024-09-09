@@ -1,12 +1,15 @@
+import os
+
+
 from appium import webdriver
 import time
 
-# 디바이스 및 앱 정보 설정
+# 디바이스 및 앱 정보 설정pip
 desired_caps = {
     "platformName": "Android",
-    "deviceName": "",
+    "deviceName": "AOS14",
     "automationName": "UiAutomator2",
-    "app": "C:\\APK\\GmarketMobile_747.04222328.apk",
+    "app": "C:\\APK\\GmarketMobile-debugFinal.09090314.apk",
     "newCommandTimeout": 900,
     "appPackage": "com.ebay.kr.gmarket",
     "appActivity": "com.ebay.kr.gmarket.eBayKoreaGmarketActivity",
