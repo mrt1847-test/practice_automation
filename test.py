@@ -14,6 +14,15 @@ elif 'Windows' in os_version:  # windows인 경우
   a = subprocess.run('start cmd /K "appium"', shell=True)
   time.sleep(5)
 
+if 'mac' in os_version:  # 맥 OS인 경우
+  # # 가상 디바이스 활성화
+  v = subprocess.Popen("emulator -avd " + json_data[0]["ss_0"]["input_select_android_version"]["aos_version"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+elif 'Windows' in os_version:
+  # # 가상 디바이스 활성화
+  v = subprocess.Popen("emulator -avd " + json_data[0]["ss_0"]["input_select_android_version"]["aos_version"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+time.sleep(60)
+
 # 디바이스 및 앱 정보 설정pip
 os_version=platform.platform()
 if 'Windows' in os_version: # windows인 경우
