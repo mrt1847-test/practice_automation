@@ -1,10 +1,18 @@
 import os
-
-
+import platform
+import subprocess
+import getpass
+import pytest
 from appium import webdriver
 import time
 from appium.options.android import UiAutomator2Options
 from src.home import *
+
+if 'mac' in os_version:  # 맥 OS인 경우
+  a = subprocess.Popen("appium", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+elif 'Windows' in os_version:  # windows인 경우
+  a = subprocess.run('start cmd /K "appium"', shell=True)
+  time.sleep(5)
 
 # 디바이스 및 앱 정보 설정pip
 os_version=platform.platform()
