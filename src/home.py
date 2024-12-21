@@ -3,8 +3,13 @@ from src.base_pages.base import *
 
 class HomePage():
 
+    IMPLICIT_WAIT_TIME = 10
+    TIMEOUT = 30
+
     def __init__(self, driver):
         self.driver = driver
+        self.driver.implicitly_wait(self.IMPLICIT_WAIT_TIME)
+        self.timeout = self.TIMEOUT
 
     def input_move_login_screen(self, use_type):
         """
