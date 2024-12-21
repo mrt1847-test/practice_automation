@@ -1,6 +1,6 @@
 
 # 앱에서 자동화 테스트 수행
-
+# 명령어 python -m pytest .\test.py
 def test111(driver):
 
   from src.home import HomePage
