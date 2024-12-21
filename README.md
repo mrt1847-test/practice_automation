@@ -10,3 +10,5 @@ apk 설치 파일 경로 설정
 
 
 appium 실행후 가상디바이스 실행 후 test.py 실행
+
+https://docs.google.com/spreadsheets/d/1Hmrpoz1EVACFY5lHW7r4v8bEtRRFu8eay7grCojRr3E/edit?gid=0#gid=0
