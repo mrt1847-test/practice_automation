@@ -39,7 +39,7 @@ from selenium.webdriver.ie.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
 from appium.webdriver.common.appiumby import AppiumBy
-from appium.webdriver.common.mobileby import MobileBy
+# from appium.webdriver.common.mobileby import MobileBy
 
 
 class BasePage:
