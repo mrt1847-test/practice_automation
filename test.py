@@ -13,35 +13,33 @@ worksheet = sh.worksheet("tc1")
 # 앱에서 자동화 테스트 수행
 # 명령어 python -m pytest .\test.py
 def test1(driver):
+  from src.home import HomePage
+  home_page = HomePage(driver)
   try:
-    from src.home import HomePage
-    home_page = HomePage(driver)
     home_page.input_move_login_screen(use_type=2)
     worksheet.update([["pass"]], "D3")
   except Exception as e:
     worksheet.update([["fail"]], "D3")
-    worksheet.update([[e]], "E3")
+    worksheet.update([[str(e)]], "E3")
   try:
-    from src.home import HomePage
-    home_page = HomePage(driver)
     home_page.input_move_login_screen(use_type=2)
     worksheet.update([["pass"]], "D4")
   except Exception as e:
     worksheet.update([["fail"]], "D4")
-    worksheet.update([[e]], "E4")
+    worksheet.update([[str(e)]], "E4")
   finally:
     # 테스트 종료
     driver.quit()
 
 def test2(driver):
+  from src.home import HomePage
+  home_page = HomePage(driver)
   try:
-    from src.home import HomePage
-    home_page = HomePage(driver)
     home_page.input_move_login_screen(use_type=2)
     worksheet.update([["pass"]], "D5")
   except Exception as e:
     worksheet.update([["fail"]], "D5")
-    worksheet.update([[e]], "E5")
+    worksheet.update([[str(e)]], "E5")
   finally:
     # 테스트 종료
     driver.quit()

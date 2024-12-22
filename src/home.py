@@ -9,7 +9,6 @@ class HomePage():
     def __init__(self, driver):
         self.driver = driver
         self.driver.implicitly_wait(self.IMPLICIT_WAIT_TIME)
-        self.timeout = self.TIMEOUT
 
     def input_move_login_screen(self, use_type):
         """
@@ -33,7 +32,7 @@ class HomePage():
                 print("#", runtext, "종료")
             except:
                 print("Not Permission popup")
-                raise
+
 
             # 지마켓 Notification 허용 알림 승인
             try:
@@ -46,6 +45,7 @@ class HomePage():
                 print("#", runtext, "종료")
             except Exception as e:
                 print("Not Notification popup", e)
+                raise
 
             # 빅스마일데이 팝업 끄기
             try:
