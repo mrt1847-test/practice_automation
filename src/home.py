@@ -33,6 +33,7 @@ class HomePage():
                 print("#", runtext, "종료")
             except:
                 print("Not Permission popup")
+                raise
 
             # 지마켓 Notification 허용 알림 승인
             try:
