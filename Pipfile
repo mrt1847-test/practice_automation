@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-appium-python-client = "==3.1.1"
+appium-python-client = "==2.11.1"
 pytest = "==7.4.3"
 pytest-env = "==1.1.3"
 
