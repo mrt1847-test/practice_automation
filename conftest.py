@@ -22,9 +22,10 @@ def driver():
 
     elif 'mac' in os_version:
         options = UiAutomator2Options()
+        app_path = os.path.abspath("/Users/mrt1847/APK/GmarketMobile_64.06180612.apk")
         options.platformName = "Android"
         options.deviceName = "AOS14"  # 에뮬레이터 또는 실제 장치의 이름
-        options.app = "C:\\APK\\GmarketMobile-debugFinal.09090314.apk"  # 앱의 APK 파일 경로
+        options.app = app_path  # 앱의 APK 파일 경로
         options.appPackage = "com.ebay.kr.gmarket"  # 앱 패키지 이름
         options.appActivity = "com.ebay.kr.gmarket.eBayKoreaGmarketActivity"  # 시작 액티비티 이름
         options.adbExecTimeout = 60000
@@ -39,4 +40,6 @@ def driver():
         raise
     while driver == None:
         time.sleep(1)
+    if 'mac' in os_version:
+        driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
     return driver
