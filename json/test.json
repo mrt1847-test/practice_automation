@@ -1,125 +1,22 @@
 [
     {
-        "case_values": {
-            "config_mode" : {
-                "value": 2
-            }
+        "tc1": {
+            "use_type": 2
         },
-        "ss_0": {
-            "appium_auto_run_use": {
-                "use_type": 1
-            },
-            "emulator_auto_run_use": {
-                "use_type": 1
-            },
-            "appium_auto_off_use": {
-                "use_type": 1
-            },
-            "emulator_auto_off_use": {
-                "use_type": 1
-            },
-            "input_select_android_version": {
-                "aos_version": "AOS14"
-            },
-            "input_move_login_screen": {
-                "use_type": 2
-            },
-            "input_login_account_type": {
-                "use_type": 1,
-                "login_type": 1,
-                "id_type": "Real-일반회원",
-                "value1": "",
-                "value2": ""
-            },
-            "assertion_login_account": {
-                "value": "None"
-            }
+        "tc2": {
+            "use_type": 2
         },
-        "ss_1_1": {
-            "ss_1_1_1_1": {
-                "use_type": 2,
-                "tr_no":"330320"
-            },
-            "ss_1_1_1_2": {
-                "use_type": 2,
-                "tr_no":"328173"
-            },
-            "ss_1_1_2_1": {
-                "use_type": 2,
-                "tr_no":"324106"
-            },
-            "ss_1_1_2_2": {
-                "use_type": 2,
-                "tr_no":"324101"
-            },
-            "ss_1_1_3_1": {
-                "use_type": 2,
-                "tr_no":"324103"
-            },
-            "ss_1_1_3_2": {
-                "use_type": 2,
-                "tr_no":"324069"
-            },
-            "ss_1_1_3_3": {
-                "use_type": 2,
-                "tr_no":"324070",
-                "goods_name": "3861014946_autotest_수정금지"
-            },
-            "ss_1_1_3_4": {
-                "use_type": 2,
-                "tr_no":"324071"
-            },
-            "ss_1_1_4_1": {
-                "use_type": 1,
-                "tr_no":"324072"
-            },
-            "ss_1_1_4_2": {
-                "use_type": 1,
-                "tr_no":"324073"
-            },
-            "ss_1_1_4_3": {
-                "use_type": 1,
-                "tr_no":"324074",
-                "goods_name": "3861014946_autotest_수정금지"
-            },
-            "ss_1_1_4_4": {
-                "use_type": 1,
-                "tr_no":"324075"
-            },
-            "ss_1_1_5_1": {
-                "use_type": 2,
-                "tr_no":"324076"
-            },
-            "ss_1_1_5_2": {
-                "use_type": 2,
-                "tr_no":"324077"
-            },
-            "ss_1_1_5_3": {
-                "use_type": 2,
-                "tr_no":"324078",
-                "goods_name": "3861014946_autotest_수정금지"
-            },
-            "ss_1_1_5_4": {
-                "use_type": 2,
-                "tr_no":"324079"
-            },
-            "ss_1_1_6_1": {
-                "use_type": 2,
-                "tr_no":"324080"
-            },
-            "ss_1_1_6_2": {
-                "use_type": 2,
-                "tr_no":"324081"
-            },
-            "ss_1_1_6_3": {
-                "use_type": 2,
-                "tr_no":"328175",
-                "goods_name": "3861014946_autotest_수정금지"
-            },
-            "ss_1_1_6_4": {
-                "use_type": 2,
-                "tr_no":"328176"
-            }
+        "tc3": {
+            "use_type": 1
+        },
+        "tc4": {
+            "use_type": 2
+        },
+        "tc5": {
+            "use_type": 2
+        },
+        "tc6": {
+            "use_type": 2
         }
     }
 ]

@@ -40,6 +40,6 @@ def driver():
         raise
     while driver == None:
         time.sleep(1)
-    if 'mac' in os_version:
-        driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
+
+    driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
     return driver

@@ -25,13 +25,17 @@ with open(current_json, 'r', encoding='utf-8') as file:
   json_data = json.load(file)
 
 def input_pass(sheet_num):
-  worksheet.update([["pass"]], "D{0}".format(sheet_num))
-  worksheet.format("D{0}".format(sheet_num), {"textFormat": {"foregroundColor": {"red": 0.0, "green": 0.5, "blue": 0.0}, "bold": True}})
-
+  if json_data[0]["tc{0}".format(sheet_num)]["use_type"] == 2:
+    worksheet.update([["pass"]], "D{0}".format(sheet_num+2))
+    worksheet.format("D{0}".format(sheet_num+2), {"textFormat": {"foregroundColor": {"red": 0.0, "green": 0.5, "blue": 0.0}, "bold": True}})
+  else:
+    worksheet.update([["untest"]], "D{0}".format(sheet_num + 2))
+    worksheet.format("D{0}".format(sheet_num + 2),
+                     {"textFormat": {"foregroundColor": {"red": 0.5, "green": 0.5, "blue": 0.5}, "bold": True}})
 def input_fail(sheet_num, error_reason):
-  worksheet.update([["fail"]], "D{0}".format(sheet_num))
-  worksheet.format("D{0}".format(sheet_num), {"textFormat": {"foregroundColor": {"red": 1.0, "green": 0.0, "blue": 0.0}, "bold": True}})
-  worksheet.update([[str(error_reason)]], "E{0}".format(sheet_num))
+  worksheet.update([["fail"]], "D{0}".format(sheet_num+2))
+  worksheet.format("D{0}".format(sheet_num+2), {"textFormat": {"foregroundColor": {"red": 1.0, "green": 0.0, "blue": 0.0}, "bold": True}})
+  worksheet.update([[str(error_reason)]], "E{0}".format(sheet_num+2))
 
 # 앱에서 자동화 테스트 수행
 # 명령어 python -m pytest .\test.py
@@ -39,15 +43,15 @@ def test1(driver):
   from src.home import HomePage
   home_page = HomePage(driver)
   try:
-    home_page.input_move_login_screen(use_type=2)
-    input_pass(3)
+    home_page.input_move_login_screen(json_data[0]["tc1"]["use_type"])
+    input_pass(1)
   except Exception as e:
-    input_fail(3, e)
+    input_fail(1, e)
   try:
-    home_page.input_move_login_screen(use_type=2)
-    input_pass(4)
+    home_page.input_move_login_screen(json_data[0]["tc2"]["use_type"])
+    input_pass(2)
   except Exception as e:
-    input_fail(4, e)
+    input_fail(2, e)
   finally:
     # 테스트 종료
     driver.quit()
@@ -56,10 +60,10 @@ def test2(driver):
   from src.home import HomePage
   home_page = HomePage(driver)
   try:
-    home_page.input_move_login_screen(use_type=2)
-    input_pass(5)
+    home_page.input_move_login_screen(json_data[0]["tc3"]["use_type"])
+    input_pass(3)
   except Exception as e:
-    input_fail(5, e)
+    input_fail(3, e)
   finally:
     # 테스트 종료
     driver.quit()
