@@ -10,6 +10,7 @@ pytest-env = "==1.1.3"
 gspread = "*"
 numpy = "*"
 pydata-google-auth = "*"
+assertpy = "*"
 
 [requires]
 python_version = "3.11"
