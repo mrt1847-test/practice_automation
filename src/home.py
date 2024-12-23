@@ -408,6 +408,46 @@ class HomePage():
             # try 블록 이후에 원래의 implicit_wait 값으로 복원
             self.driver.implicitly_wait(self.implicit_wait)
 
+    def __select_home_section(self, section_name):
+
+        """
+
+        메인 페이지 > 해당 섹션 진입
+        :param(str): section_name
+        :return 없음
+        :example: HomeGnbPageParam.__select_home_section(self,section_name)
+
+        """
+        # Given 초기화
+        runtext = '앱 재실행 - Given 초기화'
+        print("#", runtext, "시작")
+        app_package = 'com.ebay.kr.gmarket'
+        app_activity = 'com.ebay.kr.gmarket.eBayKoreaGmarketActivity'
+        self.driver.start_activity(app_package=app_package, app_activity=app_activity)
+        print("#", runtext, "종료")
+
+        # 메인 페이지 > 탭+버튼 클릭
+        time.sleep(2)
+        runtext = '메인 페이지 > 탭+버튼 클릭'
+        print("#", runtext, "시작")
+        xpath = '//android.widget.ImageButton[@content-desc="메뉴 편집"]'
+        element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        element.click()
+        print("#", runtext, "종료")
+
+        xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tvTitle" and @text="{0}"]'.format(
+            section_name)
+        HomePage.__scroll_mobile_app(self, "1", xpath, 3, 30)
+
+        runtext = '해당섹션 클릭'
+        print("#", runtext, "시작")
+        xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tvTitle" and @text="{0}"]'.format(
+            section_name)
+        time.sleep(10)
+        element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        element.click()
+        print("#", runtext, "종료")
+
     def input_move_login_screen(self, use_type):
         """
 
@@ -458,3 +498,59 @@ class HomePage():
                 print("Not Notification popup", e)
         else:
             print("#", "권한 팝업 처리하지 않음")
+
+
+    def ss_1_2_1_1(self, use_type, *args):
+        """
+        1.4.1-1) Core LP(상단 헤더 영역) - 해당 영역의 UI 확인 (문구, 아이콘, 링크)
+        :param (int) use_type: 사용 여부 (1: 미사용 / 2:사용)
+        :param (list) args[0]: 카테고리 리스트
+        :param (str) args[1]: 뒤로가기 버튼
+        :param (str) args[2]: 타이틀 문구
+        :param (str) args[3]: 장바구니 버튼
+        :return: 없음
+        :example: gmarket_regression_vip_page_param.ss_1_4_1_1(2,*args)
+        """
+
+        if use_type == 2:
+            print("#", "LP 1.2.1-1 Test Case 실행")
+            runtext = '메인페이지 > 베스트 섹션 으로 이동'
+            print("#", runtext, "시작")
+            HomePage.__select_home_section(self,"베스트")
+            print("#", runtext, "종료")
+
+
+            runtext = '메인페이지 >베스트 섹션 탑버튼 노출 확인'
+            time.sleep(2)
+            print("#", runtext, "시작")
+            id = "com.ebay.kr.gmarket:id/topButton"
+            HomePage.__scroll_mobile_app_type(self, "1", "id", id, 5, 10)
+            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
+            value = element.get_attribute('content-desc')
+            assert_that(value).is_in(args[0])  # 위로 가기
+            print("#", runtext, "종료")
+
+            runtext = '메인페이지 >베스트 섹션 탑버튼 클릭시 동작 확인'
+            time.sleep(2)
+            print("#", runtext, "시작")
+            element.click()
+            xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tv_title" and @text="전체 베스트"]'
+            HomePage.__scroll_mobile_app(self, "2", xpath, 10, 10)
+            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            value = element.text
+            assert_that(value).is_in(args[1])  # 전체 베스트
+            print("#", runtext, "종료")
+
+            # 책&문화 > 새로고침 동작 확인
+            runtext = '책&문화 > 새로고침 동작 확인'
+            print("#", runtext, "시작")
+            xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tv_title" and @text="전체 베스트"]'
+            HomePage.__scroll_mobile_app(self, "2", xpath, 10, 10)
+            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            value = element.text
+            assert_that(value).is_in(args[1])  # 전체 베스트
+            print("#", runtext, "종료")
+
+
+        else:
+            print("#", "LP 1.2.1-1 Test Case 실행 생략")

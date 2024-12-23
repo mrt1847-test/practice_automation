@@ -44,6 +44,9 @@ def test1(driver):
   home_page = HomePage(driver)
   try:
     home_page.input_move_login_screen(json_data[0]["tc1"]["use_type"])
+    home_page.ss_1_2_1_1(json_data[0]["tc1"]["use_type"],
+                         json_data[0]["tc1"]["value1"],
+                         json_data[0]["tc1"]["value2"])
     input_pass(1)
   except Exception as e:
     input_fail(1, e)
