@@ -41,6 +41,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 from appium.webdriver.common.appiumby import AppiumBy
 # from appium.webdriver.common.mobileby import MobileBy
 
+from assertpy import assert_that
+import assertpy
+
 
 class BasePage:
     """The basis for all pages."""
