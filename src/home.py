@@ -502,14 +502,12 @@ class HomePage():
 
     def ss_1_2_1_1(self, use_type, *args):
         """
-        1.4.1-1) Core LP(상단 헤더 영역) - 해당 영역의 UI 확인 (문구, 아이콘, 링크)
+        1.2.1-1) 베스트 > 기본기능
         :param (int) use_type: 사용 여부 (1: 미사용 / 2:사용)
-        :param (list) args[0]: 카테고리 리스트
-        :param (str) args[1]: 뒤로가기 버튼
-        :param (str) args[2]: 타이틀 문구
-        :param (str) args[3]: 장바구니 버튼
+        :param (list) args[0]: 위로 가기 버튼
+        :param (str) args[1]: 전체 베스트 버튼
         :return: 없음
-        :example: gmarket_regression_vip_page_param.ss_1_4_1_1(2,*args)
+        :example: gmarket_regression_vip_page_param.ss_1_2_1_1(2,*args)
         """
 
         if use_type == 2:
