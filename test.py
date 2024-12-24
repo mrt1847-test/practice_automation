@@ -28,10 +28,12 @@ def input_pass(sheet_num):
   if json_data[0]["tc{0}".format(sheet_num)]["use_type"] == 2:
     worksheet.update([["pass"]], "D{0}".format(sheet_num+2))
     worksheet.format("D{0}".format(sheet_num+2), {"textFormat": {"foregroundColor": {"red": 0.0, "green": 0.5, "blue": 0.0}, "bold": True}})
+    worksheet.update([[]], "E{0}".format(sheet_num + 2))
   else:
     worksheet.update([["untest"]], "D{0}".format(sheet_num + 2))
     worksheet.format("D{0}".format(sheet_num + 2),
                      {"textFormat": {"foregroundColor": {"red": 0.5, "green": 0.5, "blue": 0.5}, "bold": True}})
+    worksheet.update([[]], "E{0}".format(sheet_num + 2))
 def input_fail(sheet_num, error_reason):
   worksheet.update([["fail"]], "D{0}".format(sheet_num+2))
   worksheet.format("D{0}".format(sheet_num+2), {"textFormat": {"foregroundColor": {"red": 1.0, "green": 0.0, "blue": 0.0}, "bold": True}})
