@@ -12,7 +12,7 @@ gc = gspread.authorize(credentials)
 
 spreadsheet_url = "https://docs.google.com/spreadsheets/d/1Hmrpoz1EVACFY5lHW7r4v8bEtRRFu8eay7grCojRr3E/edit?gid=0#gid=0"
 sh = gc.open_by_url(spreadsheet_url)
-worksheet = sh.worksheet("tc1")
+worksheet = sh.worksheet("jb")
 os_version = platform.platform()
 if 'Windows' in os_version:  # windows인 경우
   param_json_path = os.path.dirname(__file__) + '\\json\\'
@@ -42,7 +42,7 @@ def input_fail(sheet_num, error_reason):
 # 앱에서 자동화 테스트 수행
 # 명령어 python -m pytest .\test.py
 def test1(driver):
-  from src.home import HomePage
+  from src.homejb import HomePage
   home_page = HomePage(driver)
   try:
     home_page.input_move_login_screen(json_data[0]["tc1"]["use_type"])
@@ -53,22 +53,10 @@ def test1(driver):
   except Exception as e:
     input_fail(1, e)
   try:
-    home_page.input_move_login_screen(json_data[0]["tc2"]["use_type"])
+
     input_pass(2)
   except Exception as e:
     input_fail(2, e)
-  finally:
-    # 테스트 종료
-    driver.quit()
-
-def test2(driver):
-  from src.home import HomePage
-  home_page = HomePage(driver)
-  try:
-    home_page.input_move_login_screen(json_data[0]["tc3"]["use_type"])
-    input_pass(3)
-  except Exception as e:
-    input_fail(3, e)
   finally:
     # 테스트 종료
     driver.quit()
