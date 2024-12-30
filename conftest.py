@@ -56,6 +56,7 @@ def manage_appium_server():
         # 운영 체제에 따라 명령어 설정
         if 'mac' in os_version:  # 맥 OS인 경우
             a = subprocess.Popen("appium", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            time.sleep(5)
         elif 'Windows' in os_version:  # windows인 경우
             a = subprocess.run('start cmd /K "appium"', shell=True)
             time.sleep(5)
