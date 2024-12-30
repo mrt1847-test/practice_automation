@@ -45,7 +45,7 @@ def test1(driver):
   from src.homems import HomePage
   home_page = HomePage(driver)
   try:
-    home_page.input_move_login_screen(json_data[0]["tc1"]["use_type"])
+    home_page.input_move_login_screen(2)
     home_page.ss_1_2_1_1(json_data[0]["tc1"]["use_type"],
                          json_data[0]["tc1"]["value1"],
                          json_data[0]["tc1"]["value2"])

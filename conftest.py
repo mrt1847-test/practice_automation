@@ -47,18 +47,15 @@ def driver():
 
 @pytest.fixture(scope="session", autouse=True)
 def manage_appium_server():
-    print("테스트 실행 전 준비 작업 시작...")
-
-    # (필요시 Appium 서버 실행 코드 포함 가능)
-    # ...
+    print("appium 실행")
     try:
         os_version = platform.platform()
         # 운영 체제에 따라 명령어 설정
         if 'mac' in os_version:  # 맥 OS인 경우
-            a = subprocess.Popen("appium", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            process = subprocess.Popen("appium", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             time.sleep(5)
         elif 'Windows' in os_version:  # windows인 경우
-            a = subprocess.run('start cmd /K "appium"', shell=True)
+            process = subprocess.run('start cmd /K "appium"', shell=True)
             time.sleep(5)
 
     except FileNotFoundError:
@@ -66,8 +63,7 @@ def manage_appium_server():
 
     except Exception as e:
         print("오류 발생:", e)
-    yield a
-
+    yield process
     # 테스트 종료 후 Appium 서버 종료
     print("테스트 종료 후 정리 작업 시작...")
     try:
