@@ -43,7 +43,8 @@ def driver():
         time.sleep(1)
 
     driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
-    return driver
+    yield driver
+    driver.quit()
 
 @pytest.fixture(scope="session", autouse=True)
 def manage_appium_server():
