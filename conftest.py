@@ -47,6 +47,7 @@ def driver():
         raise
     while driver == None:
         time.sleep(1)
+        print("드라이버 생성 대기중")
 
     driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
     yield driver
