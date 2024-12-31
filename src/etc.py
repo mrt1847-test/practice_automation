@@ -4,7 +4,7 @@ from PIL import Image
 import base64
 from io import BytesIO
 
-class Etc_function():
+class EtcFunction():
     IMPLICIT_WAIT_TIME = 10
     TIMEOUT = 30
 
