@@ -12,6 +12,8 @@ numpy = "*"
 pydata-google-auth = "*"
 assertpy = "*"
 psutil = "*"
+pytesseract = "*"
+tesseract = "*"
 
 [requires]
 python_version = "3.11"

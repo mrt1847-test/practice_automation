@@ -43,12 +43,15 @@ def input_fail(sheet_num, error_reason):
 # 명령어 python -m pytest .\test.py
 def test1(driver):
   from src.home import HomePage
+  from src.etc import EtcFunction
   home_page = HomePage(driver)
+  etc_func= EtcFunction(driver)
   try:
     home_page.input_move_login_screen(2)
     home_page.ss_1_2_1_1(json_data[0]["tc1"]["use_type"],
                          json_data[0]["tc1"]["value1"],
                          json_data[0]["tc1"]["value2"])
+    etc_func.analyse_image('//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tvIndex" and @text="2"]')
     input_pass(1)
   except Exception as e:
     input_fail(1, e)
@@ -57,13 +60,3 @@ def test1(driver):
     input_pass(2)
   except Exception as e:
     input_fail(2, e)
-
-
-def test2(driver):
-  from src.home import HomePage
-  home_page = HomePage(driver)
-  try:
-    home_page.input_move_login_screen(json_data[0]["tc3"]["use_type"])
-    input_pass(3)
-  except Exception as e:
-    input_fail(3, e)

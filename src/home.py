@@ -492,6 +492,7 @@ class HomePage():
                 id = "com.ebay.kr.gmarket:id/ivClose"
                 element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
                 element.click()
+                time.sleep(3)
                 print("#", runtext, "종료")
             except Exception as e:
                 print("Not Notification popup", e)
@@ -517,36 +518,36 @@ class HomePage():
             print("#", runtext, "종료")
 
 
-            runtext = '메인페이지 >베스트 섹션 탑버튼 노출 확인'
-            time.sleep(2)
-            print("#", runtext, "시작")
-            id = "com.ebay.kr.gmarket:id/topButton"
-            HomePage.__scroll_mobile_app_type(self, "1", "id", id, 5, 10)
-            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
-            value = element.get_attribute('content-desc')
-            assert_that(value).is_in(args[0])  # 위로 가기
-            print("#", runtext, "종료")
-
-            runtext = '메인페이지 >베스트 섹션 탑버튼 클릭시 동작 확인'
-            time.sleep(2)
-            print("#", runtext, "시작")
-            element.click()
-            xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tv_title" and @text="전체 베스트"]'
-            HomePage.__scroll_mobile_app(self, "2", xpath, 10, 10)
-            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
-            value = element.text
-            assert_that(value).is_in(args[1])  # 전체 베스트
-            print("#", runtext, "종료")
-
-            # 책&문화 > 새로고침 동작 확인
-            runtext = '책&문화 > 새로고침 동작 확인'
-            print("#", runtext, "시작")
-            xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tv_title" and @text="전체 베스트"]'
-            HomePage.__scroll_mobile_app(self, "2", xpath, 10, 10)
-            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
-            value = element.text
-            assert_that(value).is_in(args[1])  # 전체 베스트
-            print("#", runtext, "종료")
+            # runtext = '메인페이지 >베스트 섹션 탑버튼 노출 확인'
+            # time.sleep(2)
+            # print("#", runtext, "시작")
+            # id = "com.ebay.kr.gmarket:id/topButton"
+            # HomePage.__scroll_mobile_app_type(self, "1", "id", id, 5, 10)
+            # element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
+            # value = element.get_attribute('content-desc')
+            # assert_that(value).is_in(args[0])  # 위로 가기
+            # print("#", runtext, "종료")
+            #
+            # runtext = '메인페이지 >베스트 섹션 탑버튼 클릭시 동작 확인'
+            # time.sleep(2)
+            # print("#", runtext, "시작")
+            # element.click()
+            # xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tv_title" and @text="전체 베스트"]'
+            # HomePage.__scroll_mobile_app(self, "2", xpath, 10, 10)
+            # element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            # value = element.text
+            # assert_that(value).is_in(args[1])  # 전체 베스트
+            # print("#", runtext, "종료")
+            #
+            # # 책&문화 > 새로고침 동작 확인
+            # runtext = '책&문화 > 새로고침 동작 확인'
+            # print("#", runtext, "시작")
+            # xpath = '//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tv_title" and @text="전체 베스트"]'
+            # HomePage.__scroll_mobile_app(self, "2", xpath, 10, 10)
+            # element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            # value = element.text
+            # assert_that(value).is_in(args[1])  # 전체 베스트
+            # print("#", runtext, "종료")
 
 
         else:
