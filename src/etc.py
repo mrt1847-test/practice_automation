@@ -3,6 +3,7 @@ import pytesseract
 from PIL import Image
 import base64
 from io import BytesIO
+import platform
 
 class EtcFunction():
     IMPLICIT_WAIT_TIME = 10
@@ -14,7 +15,11 @@ class EtcFunction():
         self.timeout = self.TIMEOUT
 
     def analyse_image(self, xpath):
-        pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        os_version = platform.platform()
+        if 'Windows' in os_version:
+            pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        else:
+            pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
         # 이미지 로드
         try:
             element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
