@@ -29,5 +29,6 @@ class EtcFunction():
         try:
             recognized_text = pytesseract.image_to_string(img, config="--psm 13")
             print(f"인식된 텍스트: {recognized_text}")
+            return recognized_text
         except Exception as e:
             print(f"텍스트 인식 실패: {e}")
