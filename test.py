@@ -57,9 +57,7 @@ def test1(driver):
     input_pass(2)
   except Exception as e:
     input_fail(2, e)
-  # finally:
-  #   # 테스트 종료
-  #   driver.quit()
+
 
 def test2(driver):
   from src.home import HomePage
@@ -69,6 +67,3 @@ def test2(driver):
     input_pass(3)
   except Exception as e:
     input_fail(3, e)
-  finally:
-    # 테스트 종료
-    driver.quit()
