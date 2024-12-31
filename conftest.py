@@ -6,15 +6,18 @@ import platform
 import os
 from appium import webdriver
 import psutil
+import json
 
+with open('config.json') as config_file:
+    config = json.load(config_file)
 @pytest.fixture
 def driver():
     # 디바이스 및 앱 정보 설정pip
     os_version = platform.platform()
     if 'Windows' in os_version:  # windows인 경우
         options = UiAutomator2Options()
-        app_path = os.path.abspath("C:/APK/GmarketMobile-debugFinal.09090314.apk")
-        chrome_path = os.path.abspath("c:/webdriver/appium/chromedriver.exe")
+        app_path = os.path.abspath(config["win"]["app_path"])
+        chrome_path = os.path.abspath(config["win"]["chrome_path"])
         options.PlatformName = "Android"
         options.deviceName = "AOS14"  # 에뮬레이터 또는 실제 장치의 이름
         options.app = app_path  # 앱의 APK 파일 경로
@@ -26,8 +29,8 @@ def driver():
 
     elif 'mac' in os_version:
         options = UiAutomator2Options()
-        app_path = os.path.abspath("/Users/mrt1847/APK/GmarketMobile_64.06180612.apk")
-        chrome_path = os.path.abspath("/Users/mrt1847/webdriver/appium/chromedriver")
+        app_path = os.path.abspath(config["mac"]["app_path"])
+        chrome_path = os.path.abspath(config["mac"]["chrome_path"])
         options.platformName = "Android"
         options.deviceName = "AOS14"  # 에뮬레이터 또는 실제 장치의 이름
         options.app = app_path  # 앱의 APK 파일 경로
