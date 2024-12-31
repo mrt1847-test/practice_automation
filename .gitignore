@@ -28,5 +28,4 @@ dump.rdb
 
 .DS_Store
 
-*.json
-!config.json
+config.json
