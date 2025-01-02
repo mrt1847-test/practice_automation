@@ -86,7 +86,7 @@ def manage_appium_server():
     except Exception as e:
         print("오류 발생:", e)
     yield process
-    테스트 종료 후 Appium 서버 종료
+    # 테스트 종료 후 Appium 서버 종료
     print("테스트 종료 후 정리 작업 시작...")
     try:
         for proc in psutil.process_iter(attrs=['pid', 'name', 'cmdline']):
