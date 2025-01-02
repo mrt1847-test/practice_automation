@@ -28,11 +28,31 @@ def driver():
     options.appActivity = "com.ebay.kr.gmarket.eBayKoreaGmarketActivity"  # 시작 액티비티 이름
     options.adbExecTimeout = 60000
     options.chromedriverExecutable = chrome_path
-    options.noReset = "false"
+    options.noReset = False
+    options.set_capability("appium:chromeOptions", {
+        "androidPackage": "com.ebay.kr.gmarket"
+    })
+
+    # desired_capabilities = {
+    #     "platformName": "Android",
+    #     "deviceName": "",
+    #     "automationName": "UiAutomator2",
+    #     "app": app_path,
+    #     "newCommandTimeout": 900,
+    #     "appPackage": "com.ebay.kr.gmarket",
+    #     "appActivity": "com.ebay.kr.gmarket.eBayKoreaGmarketActivity",
+    #     "acceptInsecureCerts": True,
+    #     "noReset": False,
+    #     "chromedriverExecutable": chrome_path,
+    #     "appium:chrome_options": {
+    #         "androidPackage": "com.ebay.kr.gmarket"
+    #     }
+    # }
 
     # Appium 서버와 연결
     driver = None
     try:
+        # driver = webdriver.Remote("http://localhost:4723", desired_capabilities=desired_capabilities)
         driver = webdriver.Remote("http://localhost:4723", options=options)
         print("Driver initialized successfully!")
     except Exception as e:
@@ -54,7 +74,7 @@ def manage_appium_server():
         os_version = platform.platform()
         # 운영 체제에 따라 명령어 설정
         if 'mac' in os_version:  # 맥 OS인 경우
-            process = subprocess.Popen("appium", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            process = subprocess.Popen("appium --allow-insecure chromedriver_autodownload ", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             time.sleep(5)
         elif 'Windows' in os_version:  # windows인 경우
             process = subprocess.run('start cmd /K "appium"', shell=True)
@@ -66,7 +86,7 @@ def manage_appium_server():
     except Exception as e:
         print("오류 발생:", e)
     yield process
-    # 테스트 종료 후 Appium 서버 종료
+    테스트 종료 후 Appium 서버 종료
     print("테스트 종료 후 정리 작업 시작...")
     try:
         for proc in psutil.process_iter(attrs=['pid', 'name', 'cmdline']):

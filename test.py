@@ -48,6 +48,8 @@ def test1(driver):
   etc_func= EtcFunction(driver)
   try:
     home_page.input_move_login_screen(2)
+    etc_func.input_login_account_type(2)
+    etc_func.smile_pay_num(2)
     home_page.ss_1_2_1_1(json_data[0]["tc1"]["use_type"],
                          json_data[0]["tc1"]["value1"],
                          json_data[0]["tc1"]["value2"])

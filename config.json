@@ -1,7 +1,7 @@
 {
   "win": {
     "app_path" : "C:/APK/GmarketMobile-debugFinal.09090314.apk",
-    "chrome_path" : "c:/webdriver/appium/chromedriver.exe"
+    "chrome_path" : "C:/webdriver/appium/chromedriver.exe"
   },
   "mac": {
     "app_path" : "/Users/mrt1847/APK/GmarketMobile_64.06180612.apk",
