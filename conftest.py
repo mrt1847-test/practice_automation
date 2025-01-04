@@ -95,6 +95,7 @@ def manage_appium_server():
         os_version = platform.platform()
         # 운영 체제에 따라 명령어 설정
         if 'mac' in os_version:  # 맥 OS인 경우
+            process = subprocess.Popen("appium --allow-insecure chromedriver_autodownload", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             time.sleep(5)
         elif 'Windows' in os_version:  # windows인 경우
             process = subprocess.run('start cmd /K "appium --allow-insecure chromedriver_autodownload"', shell=True)
