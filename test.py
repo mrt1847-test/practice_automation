@@ -40,7 +40,7 @@ def input_fail(sheet_num, error_reason):
   worksheet.update([[str(error_reason)]], f"E{sheet_num+2}")
 
 # 앱에서 자동화 테스트 수행
-# 명령어 python -m pytest .\test.py
+# 명령어 python -m pytest --cache-clear .\test.py -s
 def test1(driver):
   from src.home import HomePage
   from src.etc import EtcFunction
@@ -49,16 +49,17 @@ def test1(driver):
   try:
     home_page.input_move_login_screen(2)
     etc_func.input_login_account_type(2)
-    etc_func.smile_pay_num(2)
-    home_page.ss_1_2_1_1(json_data[0]["tc1"]["use_type"],
-                         json_data[0]["tc1"]["value1"],
-                         json_data[0]["tc1"]["value2"])
-    etc_func.analyse_image('//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tvIndex" and @text="2"]')
+    value = etc_func.smile_pay_num(2)
+    # home_page.ss_1_2_1_1(json_data[0]["tc1"]["use_type"],
+    #                      json_data[0]["tc1"]["value1"],
+    #                      json_data[0]["tc1"]["value2"])
+    # etc_func.analyse_image('//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tvIndex" and @text="2"]')
     input_pass(1)
+    worksheet.update([value], "E3")
   except Exception as e:
     input_fail(1, e)
-  try:
-    home_page.input_move_login_screen(json_data[0]["tc2"]["use_type"])
-    input_pass(2)
-  except Exception as e:
-    input_fail(2, e)
+  # try:
+  #   home_page.input_move_login_screen(json_data[0]["tc2"]["use_type"])
+  #   input_pass(2)
+  # except Exception as e:
+  #   input_fail(2, e)

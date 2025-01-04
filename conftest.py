@@ -7,9 +7,11 @@ import os
 from appium import webdriver
 import psutil
 import json
+import socket
 
 with open('config.json', 'r', encoding='utf-8') as config_file:
     config = json.load(config_file)
+
 @pytest.fixture
 def driver():
     # 디바이스 및 앱 정보 설정pip
@@ -21,17 +23,28 @@ def driver():
         app_path = os.path.abspath(config["mac"]["app_path"])
         chrome_path = os.path.abspath(config["mac"]["chrome_path"])
     options = UiAutomator2Options()
-    options.PlatformName = "Android"
+    options.platformName = "Android"
     options.deviceName = "AOS14"  # 에뮬레이터 또는 실제 장치의 이름
     options.app = app_path  # 앱의 APK 파일 경로
     options.appPackage = "com.ebay.kr.gmarket"  # 앱 패키지 이름
     options.appActivity = "com.ebay.kr.gmarket.eBayKoreaGmarketActivity"  # 시작 액티비티 이름
     options.adbExecTimeout = 60000
-    options.chromedriverExecutable = chrome_path
     options.noReset = False
-    options.set_capability("appium:chromeOptions", {
-        "androidPackage": "com.ebay.kr.gmarket"
+    options.set_capability("goog:chromeOptions", {
+        "androidPackage": "com.ebay.kr.gmarket",  # 앱 패키지
+        "androidProcess": "com.ebay.kr.gmarket"  # 앱 프로세스 (필요한 경우 설정)
     })
+    # options.set_capability("chromedriverExecutable", chrome_path)
+    options.set_capability("automationName", "UiAutomator2")
+    options.set_capability("acceptInsecureCerts",True)
+    # options.set_capability("chromedriverPort", 9515)
+    # options.set_capability("goog:loggingPrefs", {
+    #     "browser": "ALL"
+    # })
+    # options.set_capability("autoWebview", True)
+
+    # adb shell dumpsys package com.android.chrome | findstr versionName
+    # adb shell dumpsys package com.android.chrome | grep versionName
 
     # desired_capabilities = {
     #     "platformName": "Android",
@@ -53,7 +66,7 @@ def driver():
     driver = None
     try:
         # driver = webdriver.Remote("http://localhost:4723", desired_capabilities=desired_capabilities)
-        driver = webdriver.Remote("http://localhost:4723", options=options)
+        driver = webdriver.Remote("http://127.0.0.1:4723", options=options)
         print("Driver initialized successfully!")
     except Exception as e:
         print(f"Driver initialization failed: {e}")
@@ -62,10 +75,18 @@ def driver():
         time.sleep(1)
         print("드라이버 생성 대기중")
 
-    driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
+    # driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
     yield driver
     # 테스트 종료 후 Appium 서버와 연결 종료
     driver.quit()
+
+def is_appium_server_running(host="localhost", port=4723):
+    """Appium 서버가 실행 중인지 확인"""
+    try:
+        with socket.create_connection((host, port), timeout=2):
+            return True
+    except (ConnectionRefusedError, socket.timeout):
+        return False
 
 @pytest.fixture(scope="session", autouse=True)
 def manage_appium_server():
@@ -74,10 +95,9 @@ def manage_appium_server():
         os_version = platform.platform()
         # 운영 체제에 따라 명령어 설정
         if 'mac' in os_version:  # 맥 OS인 경우
-            process = subprocess.Popen("appium --allow-insecure chromedriver_autodownload ", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             time.sleep(5)
         elif 'Windows' in os_version:  # windows인 경우
-            process = subprocess.run('start cmd /K "appium"', shell=True)
+            process = subprocess.run('start cmd /K "appium --allow-insecure chromedriver_autodownload"', shell=True)
             time.sleep(5)
 
     except FileNotFoundError:
@@ -85,6 +105,15 @@ def manage_appium_server():
 
     except Exception as e:
         print("오류 발생:", e)
+
+    for _ in range(10):  # 최대 10초 대기
+        if is_appium_server_running():
+            print("Appium 서버가 실행되었습니다.")
+            break
+        time.sleep(1)
+    else:
+        raise RuntimeError("Appium 서버 시작 실패")
+
     yield process
     # 테스트 종료 후 Appium 서버 종료
     print("테스트 종료 후 정리 작업 시작...")

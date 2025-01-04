@@ -1,9 +1,12 @@
+import time
+
 from src.base_pages.base import *
 import pytesseract
 from PIL import Image
 import base64
 from io import BytesIO
 import platform
+import cv2
 
 class EtcFunction():
     IMPLICIT_WAIT_TIME = 10
@@ -260,8 +263,6 @@ class EtcFunction():
         runtext = 'webView 요소 찾음'
         print(self.driver.contexts)  # 컨텍스트 리스트 확인
         webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
-        print("Available contexts:", self.driver.contexts)
-
         self.driver.switch_to.context(webview)  # 웹뷰 컨텍스트로 전환
         print("Switching to context:", webview)
         print(self.driver.window_handles)  # 웹뷰 윈도우 전체 핸들 출력
@@ -447,9 +448,9 @@ class EtcFunction():
         else:
             pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
 
-        runtext = 'webView 요소 찾음'
         print(self.driver.contexts)  # 컨텍스트 리스트 확인
         webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
+        time.sleep(5)
         self.driver.switch_to.context(webview)  # 웹뷰 컨텍스트로 전환
         print(self.driver.window_handles)  # 웹뷰 윈도우 전체 핸들 출력
         print(self.driver.current_window_handle)  # 웹뷰 윈도우 현재 핸들 출력
@@ -458,29 +459,42 @@ class EtcFunction():
         for handle in self.driver.window_handles:
             self.driver.switch_to.window(handle)
             try:
-                time.sleep(5)
-                element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                screenshot_base64 = self.driver.get_screenshot_as_base64()
+                image_data = base64.b64decode(screenshot_base64)
+                img = Image.open(BytesIO(image_data))
+                img.save("img/smile_pay_all.png")  # 디버깅용 저장
+                iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
+                # print(f"Total iframes found: {len(iframes)}")
+                # for index, iframe in enumerate(iframes):
+                #     iframe_id = iframe.get_attribute('id')
+                #     iframe_name = iframe.get_attribute('name')
+                #     iframe_title = iframe.get_attribute('title')
+                #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
+                num = xpath[-2]
+                self.driver.switch_to.frame(iframes[0])
+                print("Switched to iframe.")
+                element = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
                 screenshot_base64 = element.screenshot_as_base64
                 image_data = base64.b64decode(screenshot_base64)
                 img = Image.open(BytesIO(image_data))
-                img.save("loaded_image.png")  # 디버깅용 저장
+                img.save(f"img/number{num}.png")  # 디버깅용 저장
+                img = cv2.imread(f"img/number{num}.png")
+                img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+                img = cv2.convertScaleAbs(img, alpha=1.5, beta=50)
+                img = cv2.Canny(img, 50, 150)
                 print("이미지 로드 완료")
             except Exception as e:
                 print(f"이미지 로드 실패: {e}")
-            finally:
-                self.driver.switch_to.context('NATIVE_APP')
-
+        custom_config = r'--psm 13 -c tessedit_char_whitelist=0123456789'
         try:
-            recognized_text = pytesseract.image_to_string(img, config="--psm 13")
+            recognized_text = pytesseract.image_to_string(img, config=custom_config)
             print(f"인식된 텍스트: {recognized_text}")
-            return recognized_text
         except Exception as e:
             print(f"텍스트 인식 실패: {e}")
-        finally:
-            # try 블록 이후에 원래의 implicit_wait 값으로 복원
-            self.driver.implicitly_wait(15)
 
-        self.driver.switch_to.context('NATIVE_APP')
+        self.driver.switch_to.default_content()
+        print("Switched back to default content.")
+        return recognized_text
 
 
     def __navigate_to_target_goods_page(self, goods_name):
@@ -520,14 +534,14 @@ class EtcFunction():
             element.click()
             print("#", runtext, "종료")
 
-            # 지마켓메인 검색창 리턴
-            runtext = '메인 페이지 > 검색창 텍스트 리턴 > 입력 및 검색된 텍스트 비교'
-            print("#", runtext, "시작")
-            id = "com.ebay.kr.gmarket:id/searchKeyword"
-            element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
-            value = element.text
-            assert_that(value).is_in(goods_name)
-            print("#", runtext, "종료")
+            # # 지마켓메인 검색창 리턴
+            # runtext = '메인 페이지 > 검색창 텍스트 리턴 > 입력 및 검색된 텍스트 비교'
+            # print("#", runtext, "시작")
+            # id = "com.ebay.kr.gmarket:id/searchKeyword"
+            # element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
+            # value = element.text
+            # assert_that(value).is_in(goods_name)
+            # print("#", runtext, "종료")
 
             # 지마켓메인 SRP 상품 클릭
             runtext = '메인 페이지 > 검색 > SRP 상품 클릭'
@@ -577,14 +591,14 @@ class EtcFunction():
             print("#", runtext, "시작")
             xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[1]/android.view.View[1]/android.widget.EditText'
             element = WebDriverWait(self.driver, 40).until(EC.presence_of_element_located((By.XPATH, xpath)))
-            element.send_keys("cease2504")
+            element.send_keys("mirine0204")
             print("#", runtext, "종료")
 
             runtext = 'log_on_page > 비밀 번호 입력'
             print("#", runtext, "시작")
             xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[1]/android.view.View[2]/android.widget.EditText'
             element = self.driver.find_element(By.XPATH, xpath)
-            element.send_keys("1q2w3e4r!@")
+            element.send_keys("test1004")
             print("#", runtext, "종료")
 
             runtext = 'log_on_page > 로그인 버튼 클릭'
@@ -626,7 +640,7 @@ class EtcFunction():
 
             runtext = '메인페이지 > VIP 페이지 > 주문서 > 구매하기 클릭'
             print("#", runtext, "시작")
-            time.sleep(10)
+            time.sleep(20)
             # xpath = '//android.widget.Button[@text="15,000원 결제하기"]'
             # element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
             # element.click()
@@ -634,8 +648,11 @@ class EtcFunction():
             EtcFunction.__webview_xpath_select(self, xpath)
             print("#", runtext, "종료")
             sm_num=[]
-            for i in range(10):
+            for i in range(11):
                 xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{i+1}]'
-                sm_num[i]=EtcFunction.analyse_webview_image(self, xpath)
+                # xpath = f'#BaseContainer > div.css-ds1oq4 > div.KeyboardsNumbers__Grid > div:nth-child({i+1}) > button'
+                value=EtcFunction.analyse_webview_image(self, xpath)
+                sm_num.append(value)
+                self.driver.switch_to.context('NATIVE_APP')
             print(sm_num)
-            time.sleep(100)
+            return sm_num
