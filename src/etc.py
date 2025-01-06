@@ -464,13 +464,15 @@ class EtcFunction():
                 img = Image.open(BytesIO(image_data))
                 img.save("img/smile_pay_all.png")  # 디버깅용 저장
                 iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
-                # print(f"Total iframes found: {len(iframes)}")
-                # for index, iframe in enumerate(iframes):
-                #     iframe_id = iframe.get_attribute('id')
-                #     iframe_name = iframe.get_attribute('name')
-                #     iframe_title = iframe.get_attribute('title')
-                #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
-                num = xpath[-2]
+                print(f"Total iframes found: {len(iframes)}")
+                for index, iframe in enumerate(iframes):
+                    iframe_id = iframe.get_attribute('id')
+                    iframe_name = iframe.get_attribute('name')
+                    iframe_title = iframe.get_attribute('title')
+                    print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
+                last_three = xpath[-3:]
+                numbers = re.findall(r'\d', last_three)
+                num = ''.join(numbers)
                 self.driver.switch_to.frame(iframes[0])
                 print("Switched to iframe.")
                 element = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
@@ -478,14 +480,18 @@ class EtcFunction():
                 image_data = base64.b64decode(screenshot_base64)
                 img = Image.open(BytesIO(image_data))
                 img.save(f"img/number{num}.png")  # 디버깅용 저장
-                img = cv2.imread(f"img/number{num}.png")
-                img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-                img = cv2.convertScaleAbs(img, alpha=1.5, beta=50)
-                img = cv2.Canny(img, 50, 150)
+                img = cv2.imread(f"img/number{num}.png", cv2.IMREAD_GRAYSCALE)
+                img = cv2.resize(img, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+                # img = cv2.Canny(img, 50, 150)
+                img = cv2.medianBlur(img, 3)
+                _, img = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
+
+                img = cv2.convertScaleAbs(img, alpha=2, beta=0)  # 대비 강화
+                cv2.imwrite(f"img/grey_number{num}.png", img)
                 print("이미지 로드 완료")
             except Exception as e:
                 print(f"이미지 로드 실패: {e}")
-        custom_config = r'--psm 13 -c tessedit_char_whitelist=0123456789'
+        custom_config = r'--oem 1 --psm 6 -c tessedit_char_whitelist=0123456789'
         try:
             recognized_text = pytesseract.image_to_string(img, config=custom_config)
             print(f"인식된 텍스트: {recognized_text}")
@@ -494,7 +500,7 @@ class EtcFunction():
 
         self.driver.switch_to.default_content()
         print("Switched back to default content.")
-        return recognized_text
+        return recognized_text[:1]
 
 
     def __navigate_to_target_goods_page(self, goods_name):
@@ -591,14 +597,14 @@ class EtcFunction():
             print("#", runtext, "시작")
             xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[1]/android.view.View[1]/android.widget.EditText'
             element = WebDriverWait(self.driver, 40).until(EC.presence_of_element_located((By.XPATH, xpath)))
-            element.send_keys("mirine0204")
+            element.send_keys("cease2504")
             print("#", runtext, "종료")
 
             runtext = 'log_on_page > 비밀 번호 입력'
             print("#", runtext, "시작")
             xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[1]/android.view.View[2]/android.widget.EditText'
             element = self.driver.find_element(By.XPATH, xpath)
-            element.send_keys("test1004")
+            element.send_keys("1q2w3e4r!@")
             print("#", runtext, "종료")
 
             runtext = 'log_on_page > 로그인 버튼 클릭'
@@ -652,7 +658,35 @@ class EtcFunction():
                 xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{i+1}]'
                 # xpath = f'#BaseContainer > div.css-ds1oq4 > div.KeyboardsNumbers__Grid > div:nth-child({i+1}) > button'
                 value=EtcFunction.analyse_webview_image(self, xpath)
+                value = value.replace('\n','')
                 sm_num.append(value)
                 self.driver.switch_to.context('NATIVE_APP')
             print(sm_num)
+
+            # print(self.driver.contexts)  # 컨텍스트 리스트 확인
+            # webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
+            # time.sleep(5)
+            # self.driver.switch_to.context(webview)  # 웹뷰 컨텍스트로 전환
+            # print(self.driver.window_handles)  # 웹뷰 윈도우 전체 핸들 출력
+            # print(self.driver.current_window_handle)  # 웹뷰 윈도우 현재 핸들 출력
+
+            # 이미지 로드
+            # for handle in self.driver.window_handles:
+            #     self.driver.switch_to.window(handle)
+            #
+            #     iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
+            #     print(f"Total iframes found: {len(iframes)}")
+            #     for index, iframe in enumerate(iframes):
+            #         iframe_id = iframe.get_attribute('id')
+            #         iframe_name = iframe.get_attribute('name')
+            #         iframe_title = iframe.get_attribute('title')
+            #         print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
+            #     self.driver.switch_to.frame(iframes[0])
+            #
+            #     xpath = '(//*[@class="KeyboardsNumbers__Grid__Item"])[1]'
+            #     element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            #     element.click()
+            #     time.sleep(30)
+
+            sm_num = ",".join(sm_num)
             return sm_num

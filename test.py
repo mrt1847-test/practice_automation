@@ -55,7 +55,7 @@ def test1(driver):
     #                      json_data[0]["tc1"]["value2"])
     # etc_func.analyse_image('//android.widget.TextView[@resource-id="com.ebay.kr.gmarket:id/tvIndex" and @text="2"]')
     input_pass(1)
-    worksheet.update([value], "E3")
+    worksheet.update([[value]], "E3")
   except Exception as e:
     input_fail(1, e)
   # try:

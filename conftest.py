@@ -75,7 +75,7 @@ def driver():
         time.sleep(1)
         print("드라이버 생성 대기중")
 
-    # driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
+    driver.start_activity("com.ebay.kr.gmarket","com.ebay.kr.gmarket.eBayKoreaGmarketActivity")
     yield driver
     # 테스트 종료 후 Appium 서버와 연결 종료
     driver.quit()
