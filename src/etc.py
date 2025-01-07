@@ -663,6 +663,8 @@ class EtcFunction():
                 self.driver.switch_to.context('NATIVE_APP')
             print(sm_num)
 
+            runtext = '메인페이지 > VIP 페이지 > 주문서 > 구매하기 클릭 > 스마일페이 결제 비밀번호 입력'
+            print("#", runtext, "시작")
             print(self.driver.contexts)  # 컨텍스트 리스트 확인
             webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
             time.sleep(5)
@@ -682,15 +684,14 @@ class EtcFunction():
                 #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
                 self.driver.switch_to.frame(iframes[0])
 
-                runtext = '메인페이지 > VIP 페이지 > 주문서 > 구매하기 클릭 > 스마일페이 결제 비밀번호 입력'
-                print("#", runtext, "시작")
                 sec_num = "466835"
                 for i in sec_num:
                     x= sm_num.index(i)+1
                     xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{x}]'
                     element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
                     element.click()
-                print("#", runtext, "종료")
+            print("#", runtext, "종료")
+            self.driver.switch_to.context('NATIVE_APP')
 
             sm_num = ",".join(sm_num)
             return sm_num
