@@ -464,12 +464,12 @@ class EtcFunction():
                 img = Image.open(BytesIO(image_data))
                 img.save("img/smile_pay_all.png")  # 디버깅용 저장
                 iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
-                print(f"Total iframes found: {len(iframes)}")
-                for index, iframe in enumerate(iframes):
-                    iframe_id = iframe.get_attribute('id')
-                    iframe_name = iframe.get_attribute('name')
-                    iframe_title = iframe.get_attribute('title')
-                    print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
+                # print(f"Total iframes found: {len(iframes)}")
+                # for index, iframe in enumerate(iframes):
+                #     iframe_id = iframe.get_attribute('id')
+                #     iframe_name = iframe.get_attribute('name')
+                #     iframe_title = iframe.get_attribute('title')
+                #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
                 last_three = xpath[-3:]
                 numbers = re.findall(r'\d', last_three)
                 num = ''.join(numbers)
@@ -663,30 +663,34 @@ class EtcFunction():
                 self.driver.switch_to.context('NATIVE_APP')
             print(sm_num)
 
-            # print(self.driver.contexts)  # 컨텍스트 리스트 확인
-            # webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
-            # time.sleep(5)
-            # self.driver.switch_to.context(webview)  # 웹뷰 컨텍스트로 전환
-            # print(self.driver.window_handles)  # 웹뷰 윈도우 전체 핸들 출력
-            # print(self.driver.current_window_handle)  # 웹뷰 윈도우 현재 핸들 출력
+            print(self.driver.contexts)  # 컨텍스트 리스트 확인
+            webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
+            time.sleep(5)
+            self.driver.switch_to.context(webview)  # 웹뷰 컨텍스트로 전환
+            print(self.driver.window_handles)  # 웹뷰 윈도우 전체 핸들 출력
+            print(self.driver.current_window_handle)  # 웹뷰 윈도우 현재 핸들 출력
 
-            # 이미지 로드
-            # for handle in self.driver.window_handles:
-            #     self.driver.switch_to.window(handle)
-            #
-            #     iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
-            #     print(f"Total iframes found: {len(iframes)}")
-            #     for index, iframe in enumerate(iframes):
-            #         iframe_id = iframe.get_attribute('id')
-            #         iframe_name = iframe.get_attribute('name')
-            #         iframe_title = iframe.get_attribute('title')
-            #         print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
-            #     self.driver.switch_to.frame(iframes[0])
-            #
-            #     xpath = '(//*[@class="KeyboardsNumbers__Grid__Item"])[1]'
-            #     element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
-            #     element.click()
-            #     time.sleep(30)
+            for handle in self.driver.window_handles:
+                self.driver.switch_to.window(handle)
+
+                iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
+                # print(f"Total iframes found: {len(iframes)}")
+                # for index, iframe in enumerate(iframes):
+                #     iframe_id = iframe.get_attribute('id')
+                #     iframe_name = iframe.get_attribute('name')
+                #     iframe_title = iframe.get_attribute('title')
+                #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
+                self.driver.switch_to.frame(iframes[0])
+
+                runtext = '메인페이지 > VIP 페이지 > 주문서 > 구매하기 클릭 > 스마일페이 결제 비밀번호 입력'
+                print("#", runtext, "시작")
+                sec_num = "466835"
+                for i in sec_num:
+                    x= sm_num.index(i)+1
+                    xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{x}]'
+                    element = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                    element.click()
+                print("#", runtext, "종료")
 
             sm_num = ",".join(sm_num)
             return sm_num
