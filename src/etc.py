@@ -684,7 +684,7 @@ class EtcFunction():
                 #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
                 self.driver.switch_to.frame(iframes[0])
 
-                sec_num = "466835"
+                sec_num = ""
                 for i in sec_num:
                     x= sm_num.index(i)+1
                     xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{x}]'
