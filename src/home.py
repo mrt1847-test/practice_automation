@@ -425,6 +425,8 @@ class HomePage():
         self.driver.start_activity(app_package=app_package, app_activity=app_activity)
         print("#", runtext, "종료")
 
+        HomePage.__event_popup_all_close(self)
+
         # 메인 페이지 > 탭+버튼 클릭
         time.sleep(2)
         runtext = '메인 페이지 > 탭+버튼 클릭'
@@ -549,6 +551,35 @@ class HomePage():
             # assert_that(value).is_in(args[1])  # 전체 베스트
             # print("#", runtext, "종료")
 
+
+        else:
+            print("#", "BEST 1.2.1-1 Test Case 실행 생략")
+
+    def ss_1_2_1_4(self, use_type, *args):
+        """
+        1.2.1-1) 베스트 > 기본기능
+        :param (int) use_type: 사용 여부 (1: 미사용 / 2:사용)
+        :param (list) args[0]: 위로 가기 버튼
+        :param (str) args[1]: 전체 베스트 버튼
+        :return: 없음
+        :example: gmarket_regression_vip_page_param.ss_1_2_1_1(2,*args)
+        """
+
+        if use_type == 2:
+            print("#", "LP 1.2.1-4 Test Case 실행")
+            runtext = '메인페이지 > 베스트 섹션 으로 이동'
+            print("#", runtext, "시작")
+            HomePage.__select_home_section(self, "베스트")
+            print("#", runtext, "종료")
+
+            runtext = '메인페이지 >베스트 섹션 탑버튼 노출 확인'
+            time.sleep(2)
+            print("#", runtext, "시작")
+            xpath = "//android.widget.TextView[@resource-id=\"com.ebay.kr.gmarket:id/tvIndex\" and @text=\"10\"]"
+            HomePage.__scroll_mobile_app(self, "1", xpath, 4, 20)
+            xpath = '//android.widget.GridView[@resource-id="com.ebay.kr.gmarket:id/list"]/android.view.ViewGroup/android.widget.ImageView'
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            print("#", runtext, "종료")
 
         else:
             print("#", "BEST 1.2.1-1 Test Case 실행 생략")

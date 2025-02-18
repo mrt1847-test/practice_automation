@@ -15,6 +15,7 @@ psutil = "*"
 pytesseract = "*"
 tesseract = "*"
 opencv-python = "*"
+easyocr = "*"
 
 [requires]
 python_version = "3.11"

@@ -7,6 +7,8 @@ import base64
 from io import BytesIO
 import platform
 import cv2
+import easyocr
+from collections import Counter
 
 class EtcFunction():
     IMPLICIT_WAIT_TIME = 10
@@ -16,6 +18,7 @@ class EtcFunction():
         self.driver = driver
         self.driver.implicitly_wait(self.IMPLICIT_WAIT_TIME)
         self.timeout = self.TIMEOUT
+        self.reader = easyocr.Reader(['en'], gpu=False)
 
     def __reset_given(self):
         # Given 초기화
@@ -502,6 +505,99 @@ class EtcFunction():
         print("Switched back to default content.")
         return recognized_text[:1]
 
+    def get_most_frequent_numbers(self, image_path, num_attempts):
+        results_list = []
+
+        for _ in range(num_attempts):  # OCR을 3번 실행
+            results = self.reader.readtext(
+                image_path,
+                allowlist="0123456789",
+                contrast_ths=0.05,
+                adjust_contrast=0.3,
+                text_threshold=0.5,
+                detail=1  # 신뢰도 값을 얻기 위해 detail=1
+            )
+
+            # 숫자만 리스트에 저장
+            for result in results:
+                text = result[1]  # OCR이 인식한 텍스트
+                confidence = result[2]  # 신뢰도 (confidence score)
+                if text.isdigit():  # 숫자만 저장
+                    results_list.append((text, confidence))
+
+        # 숫자별 빈도 계산
+        count_dict = Counter([num for num, _ in results_list])
+
+        # 가장 많이 등장한 숫자 찾기 (빈도가 같은 경우, 신뢰도가 높은 숫자 선택)
+        most_frequent = \
+        max(count_dict.items(), key=lambda x: (x[1], max(conf for num, conf in results_list if num == x[0])))[0]
+
+        return most_frequent
+
+    def analyse_webview_image2(self, xpath):
+        print(self.driver.contexts)  # 컨텍스트 리스트 확인
+        webview = self.driver.contexts[1]  # 웹뷰 컨텍스트 변수 지정
+        time.sleep(5)
+        self.driver.switch_to.context(webview)  # 웹뷰 컨텍스트로 전환
+        print(self.driver.window_handles)  # 웹뷰 윈도우 전체 핸들 출력
+        print(self.driver.current_window_handle)  # 웹뷰 윈도우 현재 핸들 출력
+
+        # 이미지 로드
+        for handle in self.driver.window_handles:
+            self.driver.switch_to.window(handle)
+            try:
+                screenshot_base64 = self.driver.get_screenshot_as_base64()
+                image_data = base64.b64decode(screenshot_base64)
+                img = Image.open(BytesIO(image_data))
+                img.save("img/smile_pay_all.png")  # 디버깅용 저장
+                iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
+
+                last_three = xpath[-3:]
+                numbers = re.findall(r'\d', last_three)
+                num = ''.join(numbers)
+                self.driver.switch_to.frame(iframes[0])
+                print("Switched to iframe.")
+
+                element = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
+                screenshot_base64 = element.screenshot_as_base64
+                image_data = base64.b64decode(screenshot_base64)
+                img = Image.open(BytesIO(image_data))
+                img.save(f"img/number{num}.png")  # 디버깅용 저장
+                img = cv2.imread(f"img/number{num}.png", cv2.IMREAD_GRAYSCALE)
+                img = cv2.resize(img, None, fx=1.5, fy=2.7, interpolation=cv2.INTER_CUBIC)
+                img = cv2.medianBlur(img, 3)
+                _, img = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
+                img = cv2.convertScaleAbs(img, alpha=2, beta=0)  # 대비 강화
+                cv2.imwrite(f"img/grey_number{num}.png", img)
+                print("이미지 로드 완료")
+            except Exception as e:
+                print(f"이미지 로드 실패: {e}")
+        num_k =[]
+        count_n = []
+        try:
+            for i in range(5):
+                recognized_text = self.reader.readtext(f"img/grey_number{num}.png", text_threshold=0.15*(i+1), allowlist='0123456789', detail = 0)
+                num_k.append(recognized_text)
+
+            flat_list = [item for sublist in num_k for item in sublist] #공백 요소 제거
+
+            for i in flat_list:
+                x=num_k.count(i)
+                count_n.append(x)
+            print(num_k)
+            k=count_n.index(max(count_n))
+            # recognized_text = EtcFunction.get_most_frequent_numbers(self, f"img/grey_number{num}.png",5)
+            read_text= num_k[k][0]
+            print(f"인식된 텍스트: {read_text}")
+        except Exception as e:
+            read_text = " "
+            print(f"텍스트 인식 실패: {e}")
+
+        self.driver.switch_to.default_content()
+        print("Switched back to default content.")
+
+        return read_text
+
 
     def __navigate_to_target_goods_page(self, goods_name):
         try:
@@ -553,8 +649,8 @@ class EtcFunction():
             runtext = '메인 페이지 > 검색 > SRP 상품 클릭'
             print("#", runtext, "시작")
             time.sleep(10)
-            id = "com.ebay.kr.gmarket:id/clCardContainer"
-            element = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.ID, id)))
+            id = '//android.view.ViewGroup[@resource-id="com.ebay.kr.gmarket:id/clCardContainer"]/android.view.ViewGroup'
+            element = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, id)))
             element.click()
             print("#", runtext, "종료")
 
@@ -657,8 +753,8 @@ class EtcFunction():
             for i in range(11):
                 xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{i+1}]'
                 # xpath = f'#BaseContainer > div.css-ds1oq4 > div.KeyboardsNumbers__Grid > div:nth-child({i+1}) > button'
-                value=EtcFunction.analyse_webview_image(self, xpath)
-                value = value.replace('\n','')
+                value=EtcFunction.analyse_webview_image2(self, xpath)
+                # value = value.replace('\n','')
                 sm_num.append(value)
                 self.driver.switch_to.context('NATIVE_APP')
             print(sm_num)
@@ -684,7 +780,7 @@ class EtcFunction():
                 #     print(f"Iframe {index}: id='{iframe_id}', name='{iframe_name}', title='{iframe_title}'")
                 self.driver.switch_to.frame(iframes[0])
 
-                sec_num = ""
+                sec_num = "123456"
                 for i in sec_num:
                     x= sm_num.index(i)+1
                     xpath = f'(//*[@class="KeyboardsNumbers__Grid__Item"])[{x}]'
