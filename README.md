@@ -2,7 +2,7 @@
 
 **practice\_automation**
 
-이 프로젝트는 **Appium**과 **pytest** 기반으로 Android 앱(G마이크앱)의 테스트 자동화를 실습하기 위해 구성된 예제 레퍼지토리입니다. 앱 실행, 환경 설정, 서버 관리, 테스트 실행 전반을 자동화하고 있으며, Page Object Model(POM)을 적용한 구조로 확장이 용이합니다.
+이 프로젝트는 **Appium**과 **pytest** 기반으로 Android 앱(G마켓앱)의 테스트 자동화를 실습하기 위해 구성된 예제 레퍼지토리입니다. 앱 실행, 환경 설정, 서버 관리, 테스트 실행 전반을 자동화하고 있으며, Page Object Model(POM)을 적용한 구조로 확장이 용이합니다.
 
 ---
 
@@ -30,7 +30,7 @@ practice_automation/
 
 ### ✅ 요구상
 
-* Python 3.8+
+* Python 3.11
 * Appium 설치
   `npm install -g appium`
 * Android Emulator 또는 실기기 연결
@@ -73,7 +73,7 @@ OS에 따라 앱 경로와 크롬드라이버 경로를 분기하여 자동 설�
 ## 테스트 실행
 
 ```bash
-pytest
+python -m pytest .\test.py
 ```
 
 실행 순서:
